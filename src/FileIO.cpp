@@ -23,7 +23,6 @@ bool FileIO::loadHexFromFile(const QString &filePath, CodingEngine *engine)
     QTextStream in(&file);
     QString hex = in.readAll().trimmed();
 
-    // Try JSON format: {"coding": "BA34"}
     const QJsonDocument doc = QJsonDocument::fromJson(hex.toUtf8());
     if (doc.isObject()) {
         const QJsonObject obj = doc.object();

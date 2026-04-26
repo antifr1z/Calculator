@@ -7,7 +7,6 @@ Rectangle {
     radius: theme.radiusLarge
     implicitHeight: 50
 
-    // Designer-safe fallbacks
     readonly property var _deviceNames: typeof deviceManager !== "undefined" ? deviceManager.deviceNames : ["BCM", "Instrument Cluster", "Comfort Module"]
 
     RowLayout {
@@ -46,6 +45,7 @@ Rectangle {
                 if (currentIndex >= 0 && typeof deviceManager !== "undefined") {
                     var path = deviceManager.getConfigPath(currentIndex)
                     codingEngine.loadConfig(path)
+                    treeModel.refresh()
                 }
             }
         }

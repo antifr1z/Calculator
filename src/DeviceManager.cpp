@@ -11,7 +11,6 @@
 DeviceManager::DeviceManager(QObject *parent)
     : QObject(parent)
 {
-    // Auto-scan configs directory next to the executable
     QString appDir = QCoreApplication::applicationDirPath();
     scanDirectory(appDir + "/configs");
 }
@@ -23,7 +22,6 @@ void DeviceManager::scanDirectory(const QString &dirPath)
 
     QDir dir(dirPath);
     if (!dir.exists()) {
-        // Try relative to source
         dir.setPath(QCoreApplication::applicationDirPath() + "/../configs");
     }
     if (!dir.exists()) {

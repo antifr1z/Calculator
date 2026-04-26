@@ -11,7 +11,7 @@ CodingTreeModel::CodingTreeModel(CodingEngine *engine, QObject *parent)
     m_root = std::make_unique<TreeNode>();
     m_root->name = "root";
 
-    connect(m_engine, &CodingEngine::configurationChanged, this, &CodingTreeModel::refresh);
+    connect(m_engine, &CodingEngine::configurationChanged, this, &CodingTreeModel::updateFieldValues);
 }
 
 QModelIndex CodingTreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -130,6 +130,26 @@ void CodingTreeModel::refresh()
     endResetModel();
 }
 
+void CodingTreeModel::updateFieldValues()
+{
+    // Emit dataChanged for all value-related roles to update display without collapsing
+    for (int row = 0; row < rowCount(); ++row) {
+        QModelIndex index = this->index(row, 0);
+        emit dataChanged(index, index, {ValueRole, DisplayValueRole});
+
+        updateChildValues(index);
+    }
+}
+
+void CodingTreeModel::updateChildValues(const QModelIndex &parent)
+{
+    for (int row = 0; row < rowCount(parent); ++row) {
+        QModelIndex childIndex = this->index(row, 0, parent);
+        emit dataChanged(childIndex, childIndex, {ValueRole, DisplayValueRole});
+        updateChildValues(childIndex);
+    }
+}
+
 void CodingTreeModel::setFieldValue(int absoluteBitOffset, int bitWidth, int value)
 {
     m_engine->setFieldValue(absoluteBitOffset, bitWidth, value);
@@ -142,7 +162,6 @@ QString CodingTreeModel::getDisplayValue(int absoluteBitOffset, int bitWidth, co
     for (const auto &opt : options) {
         const QVariantMap m = opt.toMap();
         
-        // Validate that value field exists and is valid
         if (!m.contains("value")) {
             qWarning() << "Option missing 'value' field in getDisplayValue";
             continue;
@@ -156,7 +175,6 @@ QString CodingTreeModel::getDisplayValue(int absoluteBitOffset, int bitWidth, co
             continue;
         }
         
-        // Now compare with type safety
         if (optionValue == val) {
             const QStringView labelView = m["label"].toString();
             return labelView.toString();

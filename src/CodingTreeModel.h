@@ -67,11 +67,13 @@ public:
     [[nodiscard]] bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
     Q_INVOKABLE void refresh();
+    Q_INVOKABLE void updateFieldValues();
     Q_INVOKABLE void setFieldValue(int absoluteBitOffset, int bitWidth, int value);
     [[nodiscard]] Q_INVOKABLE QString getDisplayValue(int absoluteBitOffset, int bitWidth, const QVariantList &options) const;
 
 private:
     void addFieldNodes(TreeNode *parent, const std::vector<CodingFieldDef> &fields, int parentAbsOffset);
+    void updateChildValues(const QModelIndex &parent);
 
     CodingEngine *m_engine = nullptr;
     std::unique_ptr<TreeNode> m_root;
