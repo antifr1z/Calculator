@@ -46,7 +46,6 @@ Rectangle {
                 if (currentIndex >= 0 && typeof deviceManager !== "undefined") {
                     var path = deviceManager.getConfigPath(currentIndex)
                     codingEngine.loadConfig(path)
-                    treeModel.refresh()
                 }
             }
         }

@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="qml/Main.qml">C:/Users/320274594/CodingCalculator/qml/Main.qml</file>
+    <file alias="qml/DeviceSelector.qml">C:/Users/320274594/CodingCalculator/qml/DeviceSelector.qml</file>
+    <file alias="qml/CodingEditor.qml">C:/Users/320274594/CodingCalculator/qml/CodingEditor.qml</file>
+    <file alias="qml/FieldDelegate.qml">C:/Users/320274594/CodingCalculator/qml/FieldDelegate.qml</file>
+    <file alias="qml/HexInput.qml">C:/Users/320274594/CodingCalculator/qml/HexInput.qml</file>
+    <file alias="qml/Theme.qml">C:/Users/320274594/CodingCalculator/qml/Theme.qml</file>
+  </qresource>
+</RCC>
+

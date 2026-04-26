@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QCoreApplication>
+#include <QStringView>
+#include <QDebug>
 
 DeviceManager::DeviceManager(QObject *parent)
     : QObject(parent)
@@ -38,12 +40,23 @@ void DeviceManager::scanDirectory(const QString &dirPath)
             QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
             if (doc.isObject()) {
                 const QJsonObject rootObj = doc.object();
-                QString name = rootObj["device"].toString();
-                if (!name.isEmpty()) {
-                    m_deviceNames.append(std::move(name));
-                    m_devicePaths.append(entry.absoluteFilePath());
+                if (!rootObj.contains("device")) {
+                    qWarning() << "Config file missing 'device' field:" << entry.absoluteFilePath();
+                    continue;
                 }
+                
+                const QString deviceName = rootObj["device"].toString();
+                if (!deviceName.isEmpty()) {
+                    m_deviceNames.append(deviceName);
+                    m_devicePaths.append(entry.absoluteFilePath());
+                } else {
+                    qWarning() << "Config file has empty 'device' field:" << entry.absoluteFilePath();
+                }
+            } else {
+                qWarning() << "Config file is not a valid JSON object:" << entry.absoluteFilePath();
             }
+        } else {
+            qWarning() << "Failed to open config file:" << entry.absoluteFilePath();
         }
     }
 

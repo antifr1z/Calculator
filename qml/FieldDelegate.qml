@@ -2,91 +2,78 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-Item {
-    id: fieldRoot
-    implicitWidth: ListView.view ? ListView.view.width : 400
-    implicitHeight: contentRow.implicitHeight + 8
+Rectangle {
+    id: root
+    color: theme.surface
+    radius: theme.radiusSmall
+    implicitHeight: 56
+    implicitWidth: 280
 
-    // Required TreeView delegate properties
-    required property int depth
-    required property bool isTreeNode
-    required property bool expanded
-    required property bool hasChildren
-    required property int row
+    readonly property string fieldName: model.fieldName || ""
+    readonly property string fieldType: model.fieldType || ""
+    readonly property int bitOffset: model.bitOffset || 0
+    readonly property int bitWidth: model.bitWidth || 0
+    readonly property int absoluteBitOffset: model.absoluteBitOffset || 0
+    readonly property var fieldValue: model.fieldValue || 0
+    readonly property var fieldOptions: model.fieldOptions || []
+    readonly property bool editable: model.editable || false
 
-    // Data model properties
-    required property string fieldName
-    required property string fieldType
-    required property int bitOffset
-    required property int bitWidth
-    required property int absoluteBitOffset
-    required property int fieldValue
-    required property string displayValue
-    required property var fieldOptions
-    required property bool editable
-
-    Rectangle {
+    RowLayout {
         anchors.fill: parent
-        anchors.margins: 1
-        color: fieldRoot.row % 2 === 0 ? theme.surface : theme.surfaceAlt
-        radius: theme.radiusSmall
+        anchors.margins: theme.spacingNormal
+        spacing: theme.spacingMedium
 
-        RowLayout {
-            id: contentRow
-            anchors.fill: parent
-            anchors.leftMargin: 12 + fieldRoot.depth * 24
-            anchors.rightMargin: 12
-            spacing: theme.spacingNormal
-
-            // Expand indicator
+        // Expansion indicator area for nested fields
+        Rectangle {
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignVCenter
+            color: "transparent"
+            
             Text {
-                text: fieldRoot.hasChildren ? (fieldRoot.expanded ? "\u25BC" : "\u25B6") : "  "
-                color: theme.textMuted
-                font.pixelSize: 10
-                Layout.preferredWidth: 16
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (typeof treeView !== "undefined")
-                            treeView.toggleExpanded(fieldRoot.row)
-                    }
-                }
+                anchors.centerIn: parent
+                text: fieldType === appConfig.nestedType ? "▶" : ""
+                color: theme.textSecondary
+                font.pixelSize: theme.fontSmall
+                font.bold: true
             }
+        }
 
-            // Field name and bit info column
-            ColumnLayout {
+        // Field name and bit info column
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: 2
+            Layout.alignment: Qt.AlignVCenter
+
+            Text {
+                text: fieldName
+                color: fieldType === appConfig.defaultType ? theme.textMuted : theme.textPrimary
+                font.pixelSize: theme.fontNormal
+                font.bold: fieldType === appConfig.nestedType
                 Layout.fillWidth: true
-                spacing: 2
-
-                Text {
-                    text: fieldRoot.fieldName
-                    color: fieldRoot.fieldType === "reserved" ? theme.textMuted : theme.textPrimary
-                    font.pixelSize: theme.fontNormal
-                    font.bold: fieldRoot.hasChildren
-                    Layout.fillWidth: true
-                }
-
-                Text {
-                    text: "bit " + fieldRoot.absoluteBitOffset + ":" + fieldRoot.bitWidth
-                    color: theme.textMuted
-                    font.pixelSize: theme.fontSmall
-                    font.family: theme.monoFont
-                    Layout.leftMargin: 8
-                }
             }
 
-            // Value editor
-            Loader {
-                Layout.preferredWidth: 180
-                Layout.preferredHeight: 28
-                sourceComponent: {
-                    if (fieldRoot.fieldType === "bool") return boolEditor
-                    if (fieldRoot.fieldType === "enum") return enumEditor
-                    if (fieldRoot.fieldType === "reserved") return reservedLabel
-                    if (fieldRoot.fieldType === "nested") return null
-                    return reservedLabel
-                }
+            Text {
+                text: "bit " + absoluteBitOffset + ":" + bitWidth
+                color: theme.textMuted
+                font.pixelSize: theme.fontSmall
+                font.family: theme.monoFont
+                Layout.leftMargin: 8
+                visible: bitWidth > 0
+            }
+        }
+
+        // Value editor
+        Loader {
+            Layout.preferredWidth: 180
+            Layout.preferredHeight: 32
+            Layout.alignment: Qt.AlignVCenter
+            sourceComponent: {
+                if (fieldType === "bool") return boolEditor
+                if (fieldType === "enum") return enumEditor
+                if (fieldType === appConfig.defaultType) return reservedLabel
+                if (fieldType === appConfig.nestedType) return nestedEditor
+                return reservedLabel
             }
         }
     }
@@ -94,11 +81,11 @@ Item {
     Component {
         id: boolEditor
         Switch {
-            checked: fieldRoot.fieldValue !== 0
+            checked: fieldValue !== 0
             onToggled: {
                 if (typeof treeModel !== "undefined")
-                    treeModel.setFieldValue(fieldRoot.absoluteBitOffset,
-                                            fieldRoot.bitWidth,
+                    treeModel.setFieldValue(absoluteBitOffset,
+                                            bitWidth,
                                             checked ? 1 : 0)
             }
         }
@@ -107,49 +94,41 @@ Item {
     Component {
         id: enumEditor
         ComboBox {
-            id: combo
-            model: fieldRoot.fieldOptions
+            model: fieldOptions
             textRole: "label"
             valueRole: "value"
-            currentIndex: {
-                for (var i = 0; i < count; i++) {
-                    if (model[i].value === fieldRoot.fieldValue)
-                        return i
-                }
-                return -1
-            }
-
-            contentItem: Text {
-                text: combo.displayText
-                color: theme.textPrimary
-                font.pixelSize: 12
-                verticalAlignment: Text.AlignVCenter
-                leftPadding: 6
-            }
-
-            background: Rectangle {
-                color: theme.overlay
-                radius: theme.radiusSmall
-                border.color: combo.activeFocus ? theme.accent : theme.border
-            }
-
-            onActivated: {
+            currentIndex: indexOfValue(fieldValue)
+            
+            onActivated: function(currentIndex) {
                 if (typeof treeModel !== "undefined")
-                    treeModel.setFieldValue(fieldRoot.absoluteBitOffset,
-                                            fieldRoot.bitWidth,
-                                            currentValue)
+                    treeModel.setFieldValue(absoluteBitOffset,
+                                            bitWidth,
+                                            valueAt(currentIndex))
             }
+        }
+    }
+
+    Component {
+        id: nestedEditor
+        Text {
+            text: "[nested]"
+            color: theme.textSecondary
+            font.pixelSize: theme.fontNormal
+            font.italic: true
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
         }
     }
 
     Component {
         id: reservedLabel
         Text {
-            text: "0x" + fieldRoot.fieldValue.toString(16).toUpperCase()
+            text: "0x" + fieldValue.toString(16).toUpperCase().padStart(2, '0')
             color: theme.textMuted
+            font.pixelSize: theme.fontNormal
             font.family: theme.monoFont
-            font.pixelSize: 12
             verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
         }
     }
 }

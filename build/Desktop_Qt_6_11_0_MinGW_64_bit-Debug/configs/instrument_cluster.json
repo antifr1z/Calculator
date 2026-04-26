@@ -1,0 +1,72 @@
+{
+  "device": "Instrument Cluster",
+  "codingBytes": 3,
+  "fields": [
+    {
+      "name": "Units",
+      "bit": 22,
+      "width": 2,
+      "type": "enum",
+      "options": [
+        { "value": 0, "label": "km/h + Celsius" },
+        { "value": 1, "label": "mph + Fahrenheit" },
+        { "value": 2, "label": "km/h + Fahrenheit" },
+        { "value": 3, "label": "Reserved" }
+      ]
+    },
+    {
+      "name": "Language",
+      "bit": 18,
+      "width": 4,
+      "type": "enum",
+      "options": [
+        { "value": 0, "label": "German" },
+        { "value": 1, "label": "English" },
+        { "value": 2, "label": "French" },
+        { "value": 3, "label": "Spanish" },
+        { "value": 4, "label": "Italian" },
+        { "value": 5, "label": "Portuguese" },
+        { "value": 6, "label": "Dutch" },
+        { "value": 7, "label": "Turkish" },
+        { "value": 8, "label": "Russian" },
+        { "value": 9, "label": "Polish" },
+        { "value": 10, "label": "Czech" }
+      ]
+    },
+    { "name": "Speed Warning Active", "bit": 17, "width": 1, "type": "bool" },
+    {
+      "name": "Speed Warning Threshold",
+      "bit": 13,
+      "width": 4,
+      "type": "enum",
+      "options": [
+        { "value": 0, "label": "120 km/h" },
+        { "value": 1, "label": "130 km/h" },
+        { "value": 2, "label": "140 km/h" },
+        { "value": 3, "label": "150 km/h" },
+        { "value": 4, "label": "160 km/h" },
+        { "value": 5, "label": "180 km/h" },
+        { "value": 6, "label": "200 km/h" },
+        { "value": 7, "label": "220 km/h" }
+      ]
+    },
+    { "name": "Max RPM Display", "bit": 12, "width": 1, "type": "bool" },
+    { "name": "Eco Mode Indicator", "bit": 11, "width": 1, "type": "bool" },
+    { "name": "Service Interval Display", "bit": 10, "width": 1, "type": "bool" },
+    {
+      "name": "Fuel Type",
+      "bit": 8,
+      "width": 2,
+      "type": "enum",
+      "options": [
+        { "value": 0, "label": "Gasoline" },
+        { "value": 1, "label": "Diesel" },
+        { "value": 2, "label": "Hybrid" },
+        { "value": 3, "label": "Electric" }
+      ]
+    },
+    { "name": "Seat Belt Warning", "bit": 7, "width": 1, "type": "bool" },
+    { "name": "Door Open Warning", "bit": 6, "width": 1, "type": "bool" },
+    { "name": "Reserved", "bit": 0, "width": 6, "type": "reserved" }
+  ]
+}

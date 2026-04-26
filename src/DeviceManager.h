@@ -13,10 +13,10 @@ public:
     explicit DeviceManager(QObject *parent = nullptr);
 
     Q_INVOKABLE void scanDirectory(const QString &dirPath);
-    Q_INVOKABLE QString getConfigPath(int index) const;
+    [[nodiscard]] Q_INVOKABLE QString getConfigPath(int index) const;
 
-    QStringList deviceNames() const { return m_deviceNames; }
-    QStringList devicePaths() const { return m_devicePaths; }
+    [[nodiscard]] const QStringList &deviceNames() const { return m_deviceNames; }
+    [[nodiscard]] const QStringList &devicePaths() const { return m_devicePaths; }
 
 signals:
     void devicesChanged();

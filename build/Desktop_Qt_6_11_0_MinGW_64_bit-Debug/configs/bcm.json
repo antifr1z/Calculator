@@ -1,0 +1,71 @@
+{
+  "device": "BCM (Body Control Module)",
+  "codingBytes": 2,
+  "fields": [
+    {
+      "name": "Region",
+      "bit": 9,
+      "width": 7,
+      "type": "nested",
+      "children": [
+        {
+          "name": "Continent",
+          "bit": 4,
+          "width": 3,
+          "type": "enum",
+          "options": [
+            { "value": 0, "label": "Europe" },
+            { "value": 1, "label": "North America" },
+            { "value": 2, "label": "South America" },
+            { "value": 3, "label": "Australia" },
+            { "value": 4, "label": "Africa" },
+            { "value": 5, "label": "Reserved" },
+            { "value": 6, "label": "Reserved" },
+            { "value": 7, "label": "Reserved" }
+          ]
+        },
+        {
+          "name": "Country",
+          "bit": 0,
+          "width": 4,
+          "type": "enum",
+          "options": [
+            { "value": 0, "label": "Germany" },
+            { "value": 1, "label": "UK" },
+            { "value": 2, "label": "France" },
+            { "value": 3, "label": "Italy" },
+            { "value": 4, "label": "Spain" },
+            { "value": 5, "label": "Netherlands" },
+            { "value": 6, "label": "Belgium" },
+            { "value": 7, "label": "Austria" },
+            { "value": 8, "label": "Switzerland" },
+            { "value": 9, "label": "Poland" },
+            { "value": 10, "label": "Czech Republic" },
+            { "value": 11, "label": "Sweden" },
+            { "value": 12, "label": "Norway" },
+            { "value": 13, "label": "Denmark" },
+            { "value": 14, "label": "Finland" },
+            { "value": 15, "label": "Other" }
+          ]
+        }
+      ]
+    },
+    { "name": "Day Running Lights", "bit": 8, "width": 1, "type": "bool" },
+    { "name": "Comfort Lock", "bit": 7, "width": 1, "type": "bool" },
+    {
+      "name": "Tank Size",
+      "bit": 5,
+      "width": 2,
+      "type": "enum",
+      "options": [
+        { "value": 0, "label": "60L" },
+        { "value": 1, "label": "45L" },
+        { "value": 2, "label": "Reserved" },
+        { "value": 3, "label": "Reserved" }
+      ]
+    },
+    { "name": "Lock/Unlock Light Indication", "bit": 4, "width": 1, "type": "bool" },
+    { "name": "Lock/Unlock Sound Indication", "bit": 3, "width": 1, "type": "bool" },
+    { "name": "Reserved", "bit": 0, "width": 3, "type": "reserved" }
+  ]
+}

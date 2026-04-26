@@ -2,29 +2,25 @@ cmake_minimum_required(VERSION 3.20)
 project(CodingCalculator VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2)
 
-qt_standard_project_setup(REQUIRES 6.5)
-
-qt_add_executable(CodingCalculator
+add_executable(CodingCalculator
     src/main.cpp
-    src/CodingEngine.h
+    src/Application.cpp
+    src/ApplicationConfig.cpp
     src/CodingEngine.cpp
-    src/CodingTreeModel.h
     src/CodingTreeModel.cpp
-    src/DeviceManager.h
     src/DeviceManager.cpp
-    src/FileIO.h
     src/FileIO.cpp
 )
 
-qt_add_qml_module(CodingCalculator
-    URI CodingCalculator
-    VERSION 1.0
-    QML_FILES
+target_include_directories(CodingCalculator PRIVATE src)
+
+qt6_add_resources(CodingCalculator qml_files
+    PREFIX /
+    FILES
         qml/Main.qml
         qml/DeviceSelector.qml
         qml/CodingEditor.qml

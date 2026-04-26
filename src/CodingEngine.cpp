@@ -1,9 +1,12 @@
 #include "CodingEngine.h"
+#include "ApplicationConfig.h"
 
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QStringView>
+#include <QDebug>
 
 CodingEngine::CodingEngine(QObject *parent)
     : QObject(parent)
@@ -23,7 +26,13 @@ bool CodingEngine::loadConfig(const QString &filePath)
     }
 
     QJsonObject root = doc.object();
-    m_deviceName = root["device"].toString();
+    const QString deviceName = root["device"].toString();
+    if (deviceName.isEmpty()) {
+        qWarning() << "Config file missing required 'device' field";
+        return false;
+    }
+    m_deviceName = deviceName;
+
     m_codingBytes = root["codingBytes"].toInt(2);
     m_data = QByteArray(m_codingBytes, '\0');
     m_fields.clear();
@@ -33,28 +42,58 @@ bool CodingEngine::loadConfig(const QString &filePath)
         m_fields.emplace_back(parseFieldDef(fieldVal.toObject()));
     }
 
-    emit configLoaded();
-    emit hexStringChanged();
+    emit configurationChanged();
     return true;
 }
 
 CodingFieldDef CodingEngine::parseFieldDef(const QJsonObject &obj) const
 {
     CodingFieldDef def;
-    def.name = obj["name"].toString();
+
+    // Validate required fields
+    const QString name = obj["name"].toString();
+    if (name.isEmpty()) {
+        qWarning() << "Field definition missing required 'name' field";
+        return def; // Return empty field definition
+    }
+    
+    def.name = name;
+
     def.bitOffset = obj["bit"].toInt();
     def.bitWidth = obj["width"].toInt(1);
-    def.type = obj["type"].toString("reserved");
-    def.dependsOn = obj["dependsOn"].toString();
+    const QString type = obj["type"].toString(ApplicationConfig::instance().defaultType);
+    def.type = type;
+    const QString dependsOn = obj["dependsOn"].toString();
+    def.dependsOn = dependsOn;
 
     // Parse simple options array
     if (obj.contains("options") && obj["options"].isArray()) {
         const QJsonArray opts = obj["options"].toArray();
         for (const auto &o : opts) {
             const QJsonObject optObj = o.toObject();
+            
+            // Validate required fields
+            if (!optObj.contains("value") || !optObj.contains("label")) {
+                qWarning() << "Option missing required 'value' or 'label' field for field:" << def.name;
+                continue; // Skip invalid option
+            }
+            
+            // Convert value safely with validation
+            const int value = optObj["value"].toInt(-1); // -1 indicates invalid
+            if (value == -1) {
+                qWarning() << "Invalid option value for field:" << def.name;
+                continue; // Skip invalid option
+            }
+            
+            const QString label = optObj["label"].toString();
+            if (label.isEmpty()) {
+                qWarning() << "Option has empty label for field:" << def.name;
+                continue;
+            }
+            
             QVariantMap m;
-            m["value"] = optObj["value"].toInt();
-            m["label"] = optObj["label"].toString();
+            m["value"] = value;
+            m["label"] = label;
             def.options.append(m);
         }
     }
@@ -67,9 +106,28 @@ CodingFieldDef CodingEngine::parseFieldDef(const QJsonObject &obj) const
             const QJsonArray arr = it.value().toArray();
             for (const auto &o : arr) {
                 const QJsonObject optObj = o.toObject();
+                
+                // Validate dependent option has required fields
+                if (!optObj.contains("value") || !optObj.contains("label")) {
+                    qWarning() << "Dependent option missing required 'value' or 'label' field for field:" << def.name << "continent:" << it.key();
+                    continue; // Skip invalid option
+                }
+                
+                const int value = optObj["value"].toInt(-1); // -1 indicates invalid
+                if (value == -1) {
+                    qWarning() << "Invalid dependent option value for field:" << def.name << "continent:" << it.key();
+                    continue; // Skip invalid option
+                }
+
+                const QString label = optObj["label"].toString();
+                if (label.isEmpty()) {
+                    qWarning() << "Dependent option has empty label for field:" << def.name << "continent:" << it.key();
+                    continue;
+                }
+                
                 QVariantMap m;
-                m["value"] = optObj["value"].toInt();
-                m["label"] = optObj["label"].toString();
+                m["value"] = value;
+                m["label"] = label;
                 list.append(m);
             }
             def.dependentOptions[it.key()] = list;
@@ -105,7 +163,7 @@ void CodingEngine::setHexString(const QString &hex)
 
     if (newData != m_data) {
         m_data = newData;
-        emit hexStringChanged();
+        emit configurationChanged();
     }
 }
 
@@ -185,7 +243,7 @@ void CodingEngine::insertBits(int bitOffset, int bitWidth, uint32_t value)
             }
         }
     }
-    emit hexStringChanged();
+    emit configurationChanged();
 }
 
 void CodingEngine::setFieldValue(int bitOffset, int bitWidth, int value)

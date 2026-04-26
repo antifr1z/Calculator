@@ -1,5 +1,8 @@
 #include "CodingTreeModel.h"
 #include "CodingEngine.h"
+#include "ApplicationConfig.h"
+#include <QStringView>
+#include <QDebug>
 
 CodingTreeModel::CodingTreeModel(CodingEngine *engine, QObject *parent)
     : QAbstractItemModel(parent)
@@ -8,21 +11,7 @@ CodingTreeModel::CodingTreeModel(CodingEngine *engine, QObject *parent)
     m_root = std::make_unique<TreeNode>();
     m_root->name = "root";
 
-    connect(m_engine, &CodingEngine::configLoaded, this, &CodingTreeModel::refresh);
-    connect(m_engine, &CodingEngine::hexStringChanged, this, [this]() {
-        if (m_root && !m_root->children.empty()) {
-            // Notify all visible rows (including nested) that values changed
-            emit dataChanged(index(0, 0), index(rowCount() - 1, 0), {ValueRole, DisplayValueRole});
-
-            // Also notify children of expanded nodes
-            for (int i = 0; i < rowCount(); ++i) {
-                QModelIndex parent = index(i, 0);
-                if (rowCount(parent) > 0) {
-                    emit dataChanged(index(0, 0, parent), index(rowCount(parent) - 1, 0, parent), {ValueRole, DisplayValueRole});
-                }
-            }
-        }
-    });
+    connect(m_engine, &CodingEngine::configurationChanged, this, &CodingTreeModel::refresh);
 }
 
 QModelIndex CodingTreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -94,14 +83,25 @@ QVariant CodingTreeModel::data(const QModelIndex &index, int role) const
         return node->dependentOptions;
     case DependsOnRole:
         return node->dependsOn;
-    case EditableRole:
-        return node->type != "reserved" && node->type != "nested";
+    case EditableRole: {
+        const auto &cfg = ApplicationConfig::instance();
+        return node->type != cfg.defaultType && node->type != cfg.nestedType;
+    }
     case ValueRole:
         return m_engine->getFieldValue(node->absoluteBitOffset, node->bitWidth);
     case DisplayValueRole:
         return getDisplayValue(node->absoluteBitOffset, node->bitWidth, node->options);
     }
     return {};
+}
+
+bool CodingTreeModel::hasChildren(const QModelIndex &parent) const
+{
+    TreeNode *node = parent.isValid()
+        ? static_cast<TreeNode *>(parent.internalPointer())
+        : m_root.get();
+    
+    return !node->children.empty();
 }
 
 QHash<int, QByteArray> CodingTreeModel::roleNames() const
@@ -137,14 +137,33 @@ void CodingTreeModel::setFieldValue(int absoluteBitOffset, int bitWidth, int val
 
 QString CodingTreeModel::getDisplayValue(int absoluteBitOffset, int bitWidth, const QVariantList &options) const
 {
-    int val = m_engine->getFieldValue(absoluteBitOffset, bitWidth);
+    const int val = m_engine->getFieldValue(absoluteBitOffset, bitWidth);
+    
     for (const auto &opt : options) {
-        QVariantMap m = opt.toMap();
-        if (m["value"].toInt() == val) {
-            return m["label"].toString();
+        const QVariantMap m = opt.toMap();
+        
+        // Validate that value field exists and is valid
+        if (!m.contains("value")) {
+            qWarning() << "Option missing 'value' field in getDisplayValue";
+            continue;
+        }
+        
+        bool ok = false;
+        const int optionValue = m["value"].toInt(&ok);
+        
+        if (!ok) {
+            qWarning() << "Failed to convert option value to int:" << m["value"];
+            continue;
+        }
+        
+        // Now compare with type safety
+        if (optionValue == val) {
+            const QStringView labelView = m["label"].toString();
+            return labelView.toString();
         }
     }
-    return QString::number(val);
+    
+    return "0x" + QString::number(val, 16).toUpper().rightJustified(2, '0');
 }
 
 void CodingTreeModel::addFieldNodes(TreeNode *parent, const std::vector<CodingFieldDef> &fields, int parentAbsOffset)

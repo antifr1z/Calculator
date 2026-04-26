@@ -52,7 +52,7 @@ Rectangle {
 
             Connections {
                 target: typeof codingEngine !== "undefined" ? codingEngine : null
-                function onHexStringChanged() {
+                function onConfigurationChanged() {
                     if (!hexField.activeFocus)
                         hexField.text = codingEngine.hexString
                 }

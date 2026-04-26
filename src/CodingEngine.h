@@ -35,34 +35,33 @@ struct CodingFieldDef
 class CodingEngine : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString hexString READ hexString WRITE setHexString NOTIFY hexStringChanged)
-    Q_PROPERTY(QString binaryString READ binaryString NOTIFY hexStringChanged)
-    Q_PROPERTY(int codingBytes READ codingBytes NOTIFY configLoaded)
-    Q_PROPERTY(QString deviceName READ deviceName NOTIFY configLoaded)
+    Q_PROPERTY(QString hexString READ hexString WRITE setHexString NOTIFY configurationChanged)
+    Q_PROPERTY(QString binaryString READ binaryString NOTIFY configurationChanged)
+    Q_PROPERTY(int codingBytes READ codingBytes NOTIFY configurationChanged)
+    Q_PROPERTY(QString deviceName READ deviceName NOTIFY configurationChanged)
 
 public:
     explicit CodingEngine(QObject *parent = nullptr);
 
-    Q_INVOKABLE bool loadConfig(const QString &filePath);
+    [[nodiscard]] Q_INVOKABLE bool loadConfig(const QString &filePath);
 
-    QString hexString() const;
+    [[nodiscard]] QString hexString() const;
     void setHexString(const QString &hex);
-    QString binaryString() const;
-    int codingBytes() const;
-    QString deviceName() const;
+    [[nodiscard]] QString binaryString() const;
+    [[nodiscard]] int codingBytes() const;
+    [[nodiscard]] QString deviceName() const;
 
     // Bit manipulation
-    uint32_t extractBits(int bitOffset, int bitWidth) const;
+    [[nodiscard]] uint32_t extractBits(int bitOffset, int bitWidth) const;
     void insertBits(int bitOffset, int bitWidth, uint32_t value);
 
     Q_INVOKABLE void setFieldValue(int bitOffset, int bitWidth, int value);
-    Q_INVOKABLE int getFieldValue(int bitOffset, int bitWidth) const;
+    [[nodiscard]] Q_INVOKABLE int getFieldValue(int bitOffset, int bitWidth) const;
 
     const std::vector<CodingFieldDef> &fields() const { return m_fields; }
 
 signals:
-    void hexStringChanged();
-    void configLoaded();
+    void configurationChanged();  // Single signal for all configuration changes
 
 private:
     CodingFieldDef parseFieldDef(const QJsonObject &obj) const;
