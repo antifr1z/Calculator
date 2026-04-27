@@ -8,7 +8,6 @@ Rectangle {
     radius: theme.radiusLarge
     implicitHeight: 50
 
-    // Designer-safe fallbacks
     readonly property string _hexStr: typeof codingEngine !== "undefined" ? codingEngine.hexString : "BA34"
     readonly property int _maxLen: typeof codingEngine !== "undefined" ? codingEngine.codingBytes * 2 : 8
 

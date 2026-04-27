@@ -5,6 +5,7 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QDebug>
 
 FileIO::FileIO(QObject *parent)
     : QObject(parent)
@@ -14,16 +15,20 @@ FileIO::FileIO(QObject *parent)
 bool FileIO::loadHexFromFile(const QString &filePath, CodingEngine *engine)
 {
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open file for reading:" << filePath;
         return false;
+    }
 
     QTextStream in(&file);
     QString hex = in.readAll().trimmed();
 
-    // Try JSON format: {"coding": "BA34"}
-    QJsonDocument doc = QJsonDocument::fromJson(hex.toUtf8());
-    if (doc.isObject() && doc.object().contains("coding")) {
-        hex = doc.object()["coding"].toString();
+    const QJsonDocument doc = QJsonDocument::fromJson(hex.toUtf8());
+    if (doc.isObject()) {
+        const QJsonObject obj = doc.object();
+        if (obj.contains("coding")) {
+            hex = obj["coding"].toString();
+        }
     }
 
     engine->setHexString(hex);
@@ -34,6 +39,7 @@ bool FileIO::saveHexToFile(const QString &filePath, CodingEngine *engine)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Failed to open file for writing:" << filePath;
         return false;
     }
 
@@ -49,6 +55,7 @@ bool FileIO::loadBinaryFromFile(const QString &filePath, CodingEngine *engine)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Failed to open binary file for reading:" << filePath;
         return false;
     }
 
@@ -61,6 +68,7 @@ bool FileIO::saveBinaryToFile(const QString &filePath, CodingEngine *engine)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly)) {
+        qWarning() << "Failed to open binary file for writing:" << filePath;
         return false;
     }
 

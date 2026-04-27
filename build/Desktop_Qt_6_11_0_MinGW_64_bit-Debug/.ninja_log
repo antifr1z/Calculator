@@ -1,0 +1,23 @@
+# ninja log v7
+19	2381	7989353790195589	CodingCalculator_autogen/timestamp	f42b8d306e4cfd9b
+19	2381	7989353790195589	CodingCalculator_autogen/mocs_compilation.cpp	f42b8d306e4cfd9b
+19	2381	7989353790195589	C:/Users/320274594/CodingCalculator/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CodingCalculator_autogen/timestamp	f42b8d306e4cfd9b
+19	2381	7989353790195589	C:/Users/320274594/CodingCalculator/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CodingCalculator_autogen/mocs_compilation.cpp	f42b8d306e4cfd9b
+2403	2520	7989353795891685	.qt/rcc/qrc_qml_files.cpp	4ba088ed230ee23
+2403	2520	7989353795891685	C:/Users/320274594/CodingCalculator/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/.qt/rcc/qrc_qml_files.cpp	4ba088ed230ee23
+2966	3260	7989353800412315	CMakeFiles/CodingCalculator.dir/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/.qt/rcc/qrc_qml_files.cpp.obj	b753d0fa4f68ebb
+2585	5094	7989353796612504	CMakeFiles/CodingCalculator.dir/src/main.cpp.obj	42832493f4162348
+2701	5100	7989353797779867	CMakeFiles/CodingCalculator.dir/src/ApplicationConfig.cpp.obj	aeba5ab01d27ac7f
+2918	5291	7989353799941023	CMakeFiles/CodingCalculator.dir/src/FileIO.cpp.obj	60015c92c8ca9f8c
+2811	5347	7989353798870189	CMakeFiles/CodingCalculator.dir/src/CodingTreeModel.cpp.obj	1dc8bbf3fcbfc0d0
+2865	5413	7989353799411936	CMakeFiles/CodingCalculator.dir/src/DeviceManager.cpp.obj	9ae463553095b318
+2649	5534	7989353797249666	CMakeFiles/CodingCalculator.dir/src/Application.cpp.obj	587c96f63e03ed98
+2757	5540	7989353798333034	CMakeFiles/CodingCalculator.dir/src/CodingEngine.cpp.obj	6f8ecf8aa49a649e
+2523	5681	7989353795988473	CMakeFiles/CodingCalculator.dir/CodingCalculator_autogen/mocs_compilation.cpp.obj	3b72709a2e6f74c9
+5681	6949	7989353827573732	CodingCalculator.exe	7e5d5ff24bbb9142
+96	1164	7989354821291384	CodingCalculator_autogen/timestamp	f42b8d306e4cfd9b
+96	1164	7989354821291384	CodingCalculator_autogen/mocs_compilation.cpp	f42b8d306e4cfd9b
+96	1164	7989354821291384	C:/Users/320274594/CodingCalculator/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CodingCalculator_autogen/timestamp	f42b8d306e4cfd9b
+96	1164	7989354821291384	C:/Users/320274594/CodingCalculator/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CodingCalculator_autogen/mocs_compilation.cpp	f42b8d306e4cfd9b
+1165	3119	7989354831982182	CMakeFiles/CodingCalculator.dir/src/CodingEngine.cpp.obj	6f8ecf8aa49a649e
+3119	4158	7989354851534048	CodingCalculator.exe	7e5d5ff24bbb9142

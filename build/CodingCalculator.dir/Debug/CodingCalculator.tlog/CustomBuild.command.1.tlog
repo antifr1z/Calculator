@@ -1,0 +1,20 @@
+^C:\USERS\320274594\CODINGCALCULATOR\BUILD\CMAKEFILES\DB855412EF0893047038312E61B9C53A\QRC_QML_FILES.CPP.RULE
+setlocal
+C:\Qt\6.8.3\msvc2022_64\bin\rcc.exe --output C:/Users/320274594/CodingCalculator/build/.qt/rcc/qrc_qml_files.cpp --name qml_files C:/Users/320274594/CodingCalculator/build/.qt/rcc/qml_files.qrc --no-zstd
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\320274594\CODINGCALCULATOR\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/320274594/CodingCalculator -BC:/Users/320274594/CodingCalculator/build --check-stamp-file C:/Users/320274594/CodingCalculator/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

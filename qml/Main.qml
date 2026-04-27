@@ -11,7 +11,6 @@ Window {
     title: "Coding Calculator"
     color: theme.background
 
-    // Designer-safe property accessors (fallback when C++ objects unavailable)
     readonly property string _binaryStr: typeof codingEngine !== "undefined" ? codingEngine.binaryString : "1011 1010 0011 0100"
     readonly property string _hexStr: typeof codingEngine !== "undefined" ? codingEngine.hexString : "BA34"
 

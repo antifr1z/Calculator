@@ -1,0 +1,88 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-6cc9c4c708f8265bd387.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CodingCalculator",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CodingCalculator::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodingCalculator-Debug-3b72890591483964e8f7.json",
+					"name" : "CodingCalculator",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodingCalculator_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodingCalculator_autogen-Debug-891a89e0e869ebb10e4d.json",
+					"name" : "CodingCalculator_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodingCalculator_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodingCalculator_autogen_timestamp_deps-Debug-709b752365fcf6037885.json",
+					"name" : "CodingCalculator_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CodingCalculator_other_files::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CodingCalculator_other_files-Debug-7892a7622a8cab21d0d7.json",
+					"name" : "CodingCalculator_other_files",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/320274594/CodingCalculator/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug",
+		"source" : "C:/Users/320274594/CodingCalculator"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

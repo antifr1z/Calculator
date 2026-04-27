@@ -1,0 +1,50 @@
+{
+  "device": "Comfort Module",
+  "codingBytes": 2,
+  "fields": [
+    { "name": "Mirror Auto-Fold on Lock", "bit": 15, "width": 1, "type": "bool" },
+    { "name": "Mirror Dip on Reverse", "bit": 14, "width": 1, "type": "bool" },
+    {
+      "name": "Seat Memory Slots",
+      "bit": 12,
+      "width": 2,
+      "type": "enum",
+      "options": [
+        { "value": 0, "label": "Disabled" },
+        { "value": 1, "label": "2 Slots" },
+        { "value": 2, "label": "3 Slots" },
+        { "value": 3, "label": "4 Slots" }
+      ]
+    },
+    { "name": "Auto-Lock above 15 km/h", "bit": 11, "width": 1, "type": "bool" },
+    { "name": "Auto-Unlock on Key Remove", "bit": 10, "width": 1, "type": "bool" },
+    {
+      "name": "Window Close on Lock",
+      "bit": 8,
+      "width": 2,
+      "type": "enum",
+      "options": [
+        { "value": 0, "label": "Disabled" },
+        { "value": 1, "label": "Front Only" },
+        { "value": 2, "label": "Rear Only" },
+        { "value": 3, "label": "All Windows" }
+      ]
+    },
+    { "name": "Rain Sensor Sensitivity Auto", "bit": 7, "width": 1, "type": "bool" },
+    { "name": "Coming Home Lights", "bit": 6, "width": 1, "type": "bool" },
+    {
+      "name": "Coming Home Duration",
+      "bit": 4,
+      "width": 2,
+      "type": "enum",
+      "options": [
+        { "value": 0, "label": "10 sec" },
+        { "value": 1, "label": "20 sec" },
+        { "value": 2, "label": "30 sec" },
+        { "value": 3, "label": "60 sec" }
+      ]
+    },
+    { "name": "Leaving Home Lights", "bit": 3, "width": 1, "type": "bool" },
+    { "name": "Reserved", "bit": 0, "width": 3, "type": "reserved" }
+  ]
+}

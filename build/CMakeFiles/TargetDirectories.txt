@@ -1,0 +1,5 @@
+C:/Users/320274594/CodingCalculator/build/CMakeFiles/CodingCalculator.dir
+C:/Users/320274594/CodingCalculator/build/CMakeFiles/CodingCalculator_other_files.dir
+C:/Users/320274594/CodingCalculator/build/CMakeFiles/INSTALL.dir
+C:/Users/320274594/CodingCalculator/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/320274594/CodingCalculator/build/CMakeFiles/ZERO_CHECK.dir

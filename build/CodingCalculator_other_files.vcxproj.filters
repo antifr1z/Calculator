@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\320274594\CodingCalculator\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\320274594\CodingCalculator\build\.qt\rcc\qml_files.qrc" />
+    <None Include="C:\Users\320274594\CodingCalculator\qml\Main.qml" />
+    <None Include="C:\Users\320274594\CodingCalculator\qml\DeviceSelector.qml" />
+    <None Include="C:\Users\320274594\CodingCalculator\qml\CodingEditor.qml" />
+    <None Include="C:\Users\320274594\CodingCalculator\qml\FieldDelegate.qml" />
+    <None Include="C:\Users\320274594\CodingCalculator\qml\HexInput.qml" />
+    <None Include="C:\Users\320274594\CodingCalculator\qml\Theme.qml" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>

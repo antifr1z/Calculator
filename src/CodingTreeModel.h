@@ -58,19 +58,22 @@ public:
     explicit CodingTreeModel(CodingEngine *engine, QObject *parent = nullptr);
 
     // QAbstractItemModel interface
-    QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
-    QModelIndex parent(const QModelIndex &child) const override;
-    int rowCount(const QModelIndex &parent = {}) const override;
-    int columnCount(const QModelIndex &parent = {}) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    QHash<int, QByteArray> roleNames() const override;
+    [[nodiscard]] QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
+    [[nodiscard]] QModelIndex parent(const QModelIndex &child) const override;
+    [[nodiscard]] int rowCount(const QModelIndex &parent = {}) const override;
+    [[nodiscard]] int columnCount(const QModelIndex &parent = {}) const override;
+    [[nodiscard]] QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
+    [[nodiscard]] bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
     Q_INVOKABLE void refresh();
+    Q_INVOKABLE void updateFieldValues();
     Q_INVOKABLE void setFieldValue(int absoluteBitOffset, int bitWidth, int value);
-    Q_INVOKABLE QString getDisplayValue(int absoluteBitOffset, int bitWidth, const QVariantList &options) const;
+    [[nodiscard]] Q_INVOKABLE QString getDisplayValue(int absoluteBitOffset, int bitWidth, const QVariantList &options) const;
 
 private:
     void addFieldNodes(TreeNode *parent, const std::vector<CodingFieldDef> &fields, int parentAbsOffset);
+    void updateChildValues(const QModelIndex &parent);
 
     CodingEngine *m_engine = nullptr;
     std::unique_ptr<TreeNode> m_root;
